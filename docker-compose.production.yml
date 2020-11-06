@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    build: .
+    restart: always
+    command: bin/rails s -p 3000 -b 0.0.0.0
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      DOMAINS: 'example.com -> http://app:3000'
+      STAGE: 'production'
+    restart: always
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: "${PG_USER}"
+      POSTGRES_PASSWORD: "${PG_PASS}"
+    restart: always
+
